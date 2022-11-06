@@ -9,6 +9,7 @@ from waitress import serve # Para dejar la app disponible // Ordena qué puertos
 app = Flask(__name__) # Creación de una app Flask
 cors = CORS(app) # Cors se conecta con la app para manejar los cors de conexión.
 
+
 @app.route("/", methods=['GET'])
 def home():
     response = {"message": "Bienvenid@ a los servicios académicos del grupo G10"}
