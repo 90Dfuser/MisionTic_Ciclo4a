@@ -1,10 +1,10 @@
-import json
+
 from flask import Blueprint
 from flask import request
-from controllers.result_controller import ResultController
+from controllers.result_controller import Result_controller
 
 result_blueprints = Blueprint('result_blueprints', __name__)
-result_controller = ResultController()
+result_controller = Result_controller()
 
 
 @result_blueprints.route("/result/all", methods=['GET'])

@@ -26,7 +26,7 @@ def insert_political_party():
     return response, 201
 
 
-@political_parties_blueprints.route("/political__parties/update/<string: id_>", methods=['PATCH'])
+@political_parties_blueprints.route("/political__parties/update/<string:id_>", methods=['PATCH'])
 def update_political_party(id_):
     political_party = request.get_json()
     response = political_parties_controller.update(id_, political_party)

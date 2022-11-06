@@ -1,6 +1,7 @@
+from models.tables import Table
 class TableController:
     def __init__(self):
-        print("Table controller ready....")
+        print("Table controller |Ready|")
 
     def index(self) -> list:
         print("Get all")
@@ -20,17 +21,17 @@ class TableController:
 
     def create(self, table_: dict) -> dict:
         print("Insert")
-        table = TableController(table_)
+        table = Table(table_)
         return table.__dict__
 
     def update(self, id_: str, table_: dict) -> dict:
         print("Update")
         data = table_
         data["id"] = id_
-        table = TableController(table_)
+        table = Table(table_)
         return table.__dict__
 
     def delete(self, id_: str) -> str:
-        print("Delete" + id_)
+        print("Delete: " + id_)
         return {"delete-cont": 8}
 

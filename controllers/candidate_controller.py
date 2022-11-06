@@ -1,6 +1,6 @@
 class CandidateController:
     def __init__(self):
-        print("Candidate controller ready...")
+        print("Candidate controller |Ready|")
 
     def index(self) -> list:
         print("Get all")

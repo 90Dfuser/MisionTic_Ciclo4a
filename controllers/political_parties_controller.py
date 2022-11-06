@@ -1,6 +1,6 @@
 class PoliticalPartyController:
     def __init__(self):
-        print("Political party controller ready")
+        print("Political party controller |Ready|")
 
     def index(self) -> list:
         print("Get all")
