@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask import request
 from controllers.result_controller import ResultController
 
-result_blueprints = Blueprint('result_blueprint', __name__)
+result_blueprints = Blueprint('result_blueprints', __name__)
 result_controller = ResultController()
 
 
@@ -13,7 +13,7 @@ def get_all_results():
     return response, 200
 
 
-@result_blueprints.route("/result/<string: id_>", methods=['GET'])
+@result_blueprints.route("/result/<string:id_>", methods=['GET'])
 def get_result_by_id(id_):
     response = result_controller.show(id_)
     return response, 200
@@ -26,14 +26,14 @@ def insert_result():
     return response, 201
 
 
-@result_blueprints.route("/result/update/<string: id_>", methods=['PATCH'])
+@result_blueprints.route("/result/update/<string:id_>", methods=['PATCH'])
 def update_result(id_):
     result = request.get_jeson()
     response = result_controller.update(id_, result)
     return response, 201
 
 
-@result_blueprints.route("/result/delete/<string: id_>")
+@result_blueprints.route("/result/delete/<string:id_>")
 def delete_result(id_):
     response = result_controller.delete(id_)
     return response, 204

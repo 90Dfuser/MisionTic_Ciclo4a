@@ -1,6 +1,6 @@
-class ResultController:
+class Result_controller:
     def __init__(self):
-        print("Result controller ready...")
+        print("Table controller ready....")
 
     def index(self) -> list:
         print("Get all")
@@ -8,11 +8,13 @@ class ResultController:
     def show(self, id_: str) -> dict:
         print("Show by id")
 
-    def create(self, result: dict) -> dict:
+    def create(self, result_: dict) -> dict:
         print("Insert")
 
-    def update(self, id_: str, result: dict) -> dict:
+    def update(self, id_: str, result_: dict) -> dict:
         print("Update")
 
     def delete(self, id_: str) -> str:
         print("Delete")
+
+

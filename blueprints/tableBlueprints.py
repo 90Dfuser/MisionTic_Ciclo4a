@@ -13,7 +13,7 @@ def get_all_tables():
     return response, 200
 
 
-@table_blueprints.route("/table/<string: id_>", methods=['GET'])
+@table_blueprints.route("/table/<string:id_>", methods=['GET'])
 def get_table_by_id(id_):
     response = table_controller.show(id_)
     return response, 200
@@ -26,14 +26,14 @@ def insert_table():
     return response, 201
 
 
-@table_blueprints.route("/table/update/<string: id_>", methods=['PATCH'])
+@table_blueprints.route("/table/update/<string:id_>", methods=['PATCH'])
 def update_table(id_):
     table = request.get_json()
     response = table_controller.update(id_, table)
     return response, 201
 
 
-@table_blueprints.route("/table/delete/<string: id_>", methods=['DELETE'])
+@table_blueprints.route("/table/delete/<string:id_>", methods=['DELETE'])
 def delete_table(id_):
     response = table_controller.delete(id_)
     return response, 204
