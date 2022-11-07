@@ -5,9 +5,12 @@ class TableController:
 
     def index(self) -> list:
         print("Get all")
+        votos_totales = 99
         data = {
             "id": "abc123",
-            "cantidad_inscritos": "3"
+            "cantidad_votos": votos_totales,
+            "candidato_1": 50,
+            "candidato_2": 49
         }
         return [data]
 
