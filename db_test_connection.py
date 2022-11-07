@@ -9,7 +9,7 @@ client = pymongo.MongoClient(
 db = client.test
 print(db)
 
-data_base = client['academic_db']
+data_base = client['']
 print(data_base.list_collection_names())
 
 table = data_base.get_collection('table')
