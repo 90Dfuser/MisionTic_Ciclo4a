@@ -137,12 +137,25 @@ class InterfaceRepository(Generic[T]):
                 document[key] = self.transform_object_ids(value)
         return document
 
-    def format_list(self):
-        pass
+    def format_list(self, list_: list) -> list:
+        processed_list = []
+        for item in list_:
+            if isinstance(item, ObjectId):
+                temp = item.__str__()
+                processed_list.append(temp)
+        if len(processed_list) == 0:
+            processed_list = list_
+        return processed_list
 
     # Python to Mongo
-    def transform_refs(self):
-        pass
+    def transform_refs(self, item: T) -> T:
+        item_dict = item.__dict__
+        for key in item_dict.keys():
+            if item_dict.get(key).__str__().count("object") == 1:
+                object_ = self.object_to_db_ref(getattr(item, key))
+                set(item, key, object_)
+        return item
 
-    def object_to_db_ref(self):
-        pass
+    def object_to_db_ref(self, item_ref: T) -> DBRef:
+        collection_ref = item_ref.__class__.__name__.lower()
+        return DBRef(collection_ref, ObjectId(item_ref._id))

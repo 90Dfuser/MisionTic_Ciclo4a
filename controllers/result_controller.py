@@ -1,6 +1,6 @@
 class Result_controller:
     def __init__(self):
-        print("Result controller |Ready|")
+        print("|Ready| Result controller")
 
     def index(self) -> list:
         print("Get all")
