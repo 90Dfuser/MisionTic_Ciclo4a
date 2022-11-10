@@ -1,7 +1,7 @@
 import json
 import pymongo
 import certifi
-from bson import ObjectId
+from bson import ObjectId, DBRef
 from typing import Generic, TypeVar, get_args
 
 T = TypeVar('T')
@@ -66,19 +66,49 @@ class InterfaceRepository(Generic[T]):
         return self.find_by_id(id_)
 
     def update(self, id_: str, item: T) -> dict:
-        pass
+        current_collection = self.data_base[self.collection]
+        _id = ObjectId(id_)
+        item = item.__dict__
+        update_item = {"$set": item}
+        document = current_collection.update_one({'_id': _id}, update_item)
+        return {"update_count": document.matched_count}
 
     def delete(self, id_: str) -> dict:
-        pass
+        current_collection = self.data_base[self.collection]
+        _id = ObjectId(id_)
+        result = current_collection.delete_one({"_id": _id})
+        return {"delete_count": result.deleted_count}
 
     def query(self, query: dict) -> list:
-        pass
+        current_collection = self.data_base[self.collection]
+        dataset = []
+        for document in current_collection.find(query):
+            document['_id'] = document['_id'].__str__()
+            document = self.transform_object_ids(document)
+            document = self.get_values_db_ref(document)
+            dataset.append(document)
+        return dataset
 
     def query_aggregation(self, query:dict) -> list:
-        pass
+        current_collection = self.data_base[self.collection]
+        dataset = []
+        for document in current_collection.aggregate(query):
+            document['_id'] = document['_id'].__str__()
+            document = self.transform_object_ids(document)
+            document = self.get_values_db_ref(document)
+            dataset.append(document)
+        return dataset
 
-    def get_values_db_ref(self):
-        pass
+    # Mongo to Python
+    def get_values_db_ref(self, document: dict) -> dict:
+        for key in document.keys():
+            if isinstance(document.get(key), DBRef):
+                collection_ref = self.data_base[document.get(key).collection]
+                _id = ObjectId(document.get(key).id)
+                document_ref = collection_ref.find({'_id': _id)
+                document_ref['_id'] = document_ref['_id'].__str__()
+                document[key] = document_ref
+
 
     def get_values_db_ref_from_list(self):
         pass
@@ -86,10 +116,11 @@ class InterfaceRepository(Generic[T]):
     def transform_object_ids(self):
         pass
 
-    def transform_refs(self):
+    def format_list(self):
         pass
 
-    def format_list(self):
+    # Python to Mongo
+    def transform_refs(self):
         pass
 
     def object_to_db_ref(self):
