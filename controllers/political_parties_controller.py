@@ -1,18 +1,25 @@
+from models.politicalParties import PoliticalParty
+from repositories.political_parties_repository import PoliticalPartyRepository
+
+
 class PoliticalPartyController:
     def __init__(self):
-        print("Political party controller |Ready|")
+        print("|Ready| Political party controller")
+        self.political_party_repository = PoliticalPartyRepository()
 
     def index(self) -> list:
-        print("Get all")
+        return self.political_party_repository.find_all()
 
     def show(self, id_: str) -> dict:
-        print("Show by id")
+        return self.political_party_repository.find_by_id(id_)
 
     def create(self, political_party: dict) -> dict:
-        print("Create")
+        political_party = PoliticalParty(political_party)
+        return self.political_party_repository.save(political_party)
 
     def update(self, id_: str, political_party: dict) -> dict:
-        print("Update")
+        political_party = PoliticalParty(political_party)
+        return self.political_party_repository.update(political_party)
 
     def delete(self, id_: str) -> str:
-        print("Delete")
+        return self.political_party_repository.delete(id_)

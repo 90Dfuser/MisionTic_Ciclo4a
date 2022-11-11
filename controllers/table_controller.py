@@ -1,40 +1,31 @@
 from models.tables import Table
+from repositories.tables_repository import TableRepository
+
+
 class TableController:
     def __init__(self):
-        print("Table controller |Ready|")
+        print("|Ready| Table controller")
+        self.table_repository = TableRepository()
 
     def index(self) -> list:
-        print("Get all")
-        votos_totales = 99
-        data = {
-            "id": "abc123",
-            "cantidad_votos": votos_totales,
-            "candidato_1": 50,
-            "candidato_2": 49
-        }
-        return [data]
+        return self.table_repository.find_all()
 
     def show(self, id_: str) -> dict:
-        print("Show by id")
-        data = {
-            "_id": id_,
-            "cantidad_inscritos": "3"
-        }
-        return data
+        return self.table_repository.find_by_id(id_)
 
     def create(self, table_: dict) -> dict:
         print("Insert")
         table = Table(table_)
-        return table.__dict__
+        return self.table_repository.save(table)
 
     def update(self, id_: str, table_: dict) -> dict:
         print("Update")
         data = table_
         data["id"] = id_
         table = Table(table_)
-        return table.__dict__
+        return self.table_repository.update(id_, table)
 
     def delete(self, id_: str) -> str:
         print("Delete: " + id_)
-        return {"delete-cont": 8}
+        return self.table_repository.delete(id_)
 

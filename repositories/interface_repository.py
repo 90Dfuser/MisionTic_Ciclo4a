@@ -68,16 +68,17 @@ class InterfaceRepository(Generic[T]):
     def update(self, id_: str, item: T) -> dict:
         current_collection = self.data_base[self.collection]
         _id = ObjectId(id_)
+        #delattr(item, 'id')
         item = item.__dict__
         update_item = {"$set": item}
-        document = current_collection.update_one({'_id': _id}, update_item)
-        return {"update_count": document.matched_count}
+        document = current_collection.update_one({"_id": _id}, update_item)
+        return {"update-count": document.matched_count}
 
     def delete(self, id_: str) -> dict:
         current_collection = self.data_base[self.collection]
         _id = ObjectId(id_)
         result = current_collection.delete_one({"_id": _id})
-        return {"delete_count": result.deleted_count}
+        return {"delete-count": result.deleted_count}
 
     def query(self, query: dict) -> list:
         current_collection = self.data_base[self.collection]
@@ -89,7 +90,7 @@ class InterfaceRepository(Generic[T]):
             dataset.append(document)
         return dataset
 
-    def query_aggregation(self, query:dict) -> list:
+    def query_aggregation(self, query: dict) -> list:
         current_collection = self.data_base[self.collection]
         dataset = []
         for document in current_collection.aggregate(query):
@@ -102,26 +103,60 @@ class InterfaceRepository(Generic[T]):
     # Mongo to Python
     def get_values_db_ref(self, document: dict) -> dict:
         for key in document.keys():
-            if isinstance(document.get(key), DBRef):
-                collection_ref = self.data_base[document.get(key).collection]
-                _id = ObjectId(document.get(key).id)
-                document_ref = collection_ref.find({'_id': _id)
-                document_ref['_id'] = document_ref['_id'].__str__()
+            value = document.get(key)
+            if isinstance(value, DBRef):
+                collection_ref = self.data_base[value.collection]
+                _id = ObjectId(value.id)
+                document_ref = collection_ref.find({"_id": _id})
+                document_ref["_id"] = document_ref["_id"].__str__()
                 document[key] = document_ref
+                document[key] = self.get_values_db_ref(document[key])
+            elif isinstance(value, list) and len(value) > 0:
+                document[key] = self.get_values_db_ref_from_list(value)
+            elif isinstance(value, dict):
+                document[key] = self.get_values_db_ref(value)
+        return document
 
+    def get_values_db_ref_from_list(self, list_: list) -> list:
+        processed_list = []
+        collection_ref = self.data_base[list_[0]._id.collection]
+        for item in list_:
+            _id = ObjectId(item._id)
+            document_ref = collection_ref.find_one({"_id": _id})
+            document_ref["_id"] = document_ref["_id"].__str__()
+            processed_list.append(document_ref)
+        return processed_list
 
-    def get_values_db_ref_from_list(self):
-        pass
+    def transform_object_ids(self, document: dict) -> dict:
+        for key in document.keys():
+            value = document.get(key)
+            if isinstance(value, ObjectId):
+                document[key] = document[key].__str__()
+            elif isinstance(value, list) and len(value) > 0:
+                document[key] = self.format_list(value)
+            elif isinstance(value, dict):
+                document[key] = self.transform_object_ids(value)
+        return document
 
-    def transform_object_ids(self):
-        pass
-
-    def format_list(self):
-        pass
+    def format_list(self, list_: list) -> list:
+        processed_list = []
+        for item in list_:
+            if isinstance(item, ObjectId):
+                temp = item.__str__()
+                processed_list.append(temp)
+        if len(processed_list) == 0:
+            processed_list = list_
+        return processed_list
 
     # Python to Mongo
-    def transform_refs(self):
-        pass
+    def transform_refs(self, item: T) -> T:
+        item_dict = item.__dict__
+        for key in item_dict.keys():
+            if item_dict.get(key).__str__().count("object") == 1:
+                object_ = self.object_to_db_ref(getattr(item, key))
+                set(item, key, object_)
+        return item
 
-    def object_to_db_ref(self):
-        pass
+    def object_to_db_ref(self, item_ref: T) -> DBRef:
+        collection_ref = item_ref.__class__.__name__.lower()
+        return DBRef(collection_ref, ObjectId(item_ref._id))
