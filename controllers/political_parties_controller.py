@@ -23,3 +23,4 @@ class PoliticalPartyController:
 
     def delete(self, id_: str) -> str:
         return self.political_party_repository.delete(id_)
+    # ========================================================================
