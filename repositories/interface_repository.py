@@ -48,7 +48,7 @@ class InterfaceRepository(Generic[T]):
             document = {}
         return document
 
-    def save(self, item: T) -> T:
+    def save(self, item: T) -> dict:
         current_collection = self.data_base[self.collection]
         item = self.transform_refs(item)
         if hasattr(item, '_id') and item._id != "":
@@ -68,7 +68,7 @@ class InterfaceRepository(Generic[T]):
     def update(self, id_: str, item: T) -> dict:
         current_collection = self.data_base[self.collection]
         _id = ObjectId(id_)
-        #delattr(item, 'id')
+        # delattr(item, 'id')
         item = item.__dict__
         update_item = {"$set": item}
         document = current_collection.update_one({"_id": _id}, update_item)
