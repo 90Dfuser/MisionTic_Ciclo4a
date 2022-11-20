@@ -19,10 +19,16 @@ def get_result_by_id(id_):
     return response, 200
 
 
-@result_blueprints.route("/result/insert", methods=['POST'])
-def insert_result():
+@result_blueprints.route("/result/candidate/<string:candidate_id>", methods=['GET'])
+def get_result_by_candidate(candidate_id):
+    response = result_controller.get_by_candidate(candidate_id)
+    return response, 200
+
+
+@result_blueprints.route("/result/insert/candidate/<string:candidate_id>/table/<string:table_id>", methods=['POST'])
+def insert_result(candidate_id, table_id):
     result = request.get_json()
-    response = result_controller.create(result)
+    response = result_controller.create(result, candidate_id, table_id)
     return response, 201
 
 
@@ -33,7 +39,7 @@ def update_result(id_):
     return response, 201
 
 
-@result_blueprints.route("/result/delete/<string:id_>")
+@result_blueprints.route("/result/delete/<string:id_>", methods=['DELETE'])
 def delete_result(id_):
     response = result_controller.delete(id_)
     return response, 204
