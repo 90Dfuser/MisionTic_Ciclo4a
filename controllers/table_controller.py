@@ -25,7 +25,7 @@ class TableController:
         table = Table(table_)
         return self.table_repository.update(id_, table)
 
-    def delete(self, id_: str) -> str:
+    def delete(self, id_: str) -> dict:
         print("Delete: " + id_)
         return self.table_repository.delete(id_)
 

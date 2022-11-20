@@ -7,33 +7,33 @@ political_parties_blueprints = Blueprint('political_parties_blueprints', __name_
 political_parties_controller = PoliticalPartyController()
 
 
-@political_parties_blueprints.route("/political-parties/all", methods=['GET'])
+@political_parties_blueprints.route("/political_parties/all", methods=['GET'])
 def get_all_political_parties():
     response = political_parties_controller.index()
     return response, 200
 
 
-@political_parties_blueprints.route("/political-parties/<string:id_>", methods=['GET'])
+@political_parties_blueprints.route("/political_parties/<string:id_>", methods=['GET'])
 def get_political_party_by_id(id_):
     response = political_parties_controller.show(id_)
     return response, 200
 
 
-@political_parties_blueprints.route("/political-parties/insert", methods=['POST'])
+@political_parties_blueprints.route("/political_parties/insert", methods=['POST'])
 def insert_political_party():
     political_party = request.get_json()
     response = political_parties_controller.create(political_party)
     return response, 201
 
 
-@political_parties_blueprints.route("/political-parties/update/<string:id_>", methods=['PATCH'])
+@political_parties_blueprints.route("/political_parties/update/<string:id_>", methods=['PATCH'])
 def update_political_party(id_):
     political_party = request.get_json()
     response = political_parties_controller.update(id_, political_party)
     return response, 201
 
 
-@political_parties_blueprints.route("/political-parties/delete/<string:id_>", methods=['DELETE'])
+@political_parties_blueprints.route("/political_parties/delete/<string:id_>", methods=['DELETE'])
 def delete_political_party(id_):
     response = political_parties_controller.delete(id_)
     return response, 204

@@ -21,5 +21,5 @@ class PoliticalPartyController:
         political_party = PoliticalParty(political_party)
         return self.political_party_repository.update(political_party)
 
-    def delete(self, id_: str) -> str:
+    def delete(self, id_: str) -> dict:
         return self.political_party_repository.delete(id_)

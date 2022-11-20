@@ -21,7 +21,7 @@ class Result_controller:
         result = Result(result_)
         return self.result_repository.update(id_, result)
 
-    def delete(self, id_: str) -> str:
+    def delete(self, id_: str) -> dict:
         return self.result_repository.delete(id_)
 
 
